@@ -1,4 +1,5 @@
 import React, { Component } from "react";
+import axios from "axios";
 
 import PortfolioItem from "./portfolio-item";
 
@@ -8,15 +9,12 @@ export default class PortfolioContainer extends Component {
         
         this.state ={
             pageTitle: "Welcome to my portfolio",
-            data: [
-                { title: "Quip", category: "eCommerce" },
-                { title: "Eventbrite", category: "Scheduling" },
-                { title: "Ministry Safe", category: "Enterprise" },
-                { title: "SwingAway", category: "eCommerce" }
-            ]
+            isloading: false,
+            data: []
         };
 
         this.handleFilter = this.handleFilter.bind(this);
+        this.getPortfolioItems = this.getPortfolioItems.bind(this);
     }
 
     handleFilter(filter) {
@@ -27,12 +25,36 @@ export default class PortfolioContainer extends Component {
         });
     }
 
+    getPortfolioItems() {
+        axios
+          .get("https://trevorh.devcamp.space/portfolio/portfolio_items")
+          .then(response => {
+              this.setState({
+                  data: response.data.portfolio_items
+              });
+          })
+          .catch(error => {
+            console.log(error);
+          });
+      }
+
     portfolioItems(){
         let keyCounter = 0;
         return this.state.data.map(item => {
+            console.log("portfolio item", item);
             keyCounter++;
-            return <PortfolioItem title={item.title} url={"google.com"} key={keyCounter}/>;
+            return (
+            <PortfolioItem 
+            title={item.name} 
+            url={item.url} 
+            key={item.id} 
+            slug ={item.id}/>
+            );
         });
+    }
+
+    componentDidMount() {
+        this.getPortfolioItems();
     }
    
     render() {

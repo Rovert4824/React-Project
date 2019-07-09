@@ -1,18 +1,13 @@
 import React from "react";
+import {Link} from "react-router-dom";
 
 export default function(props) {
     return (
         <div>
             <h3>{props.title}</h3>
             <h4>{props.url}</h4>
+
+            <Link to={`/portfolio/${props.slug}`}>Link</Link>
         </div>
-        // <div className="card" id="5" styles="{ color: red; font-weigth: 900; }">
-        //     <div className="title">
-        //         <PortfolioItem title="Quip" url="google.com" />
-        //     </div>
-        //     <div className="description">
-        //         Some details...
-        //     </div>
-        // </div>
     );
 }

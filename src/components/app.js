@@ -7,11 +7,13 @@ import Home from "./pages/home";
 import About from "./pages/about";
 import Contact from "./pages/contact";
 import Blog from "./pages/blog";
+import PortfolioDetail from "./portfolio/portfolio-detail";
+import NoMatch from "./pages/no-match";
 
 
 // Creates an `App` class that is a child of the `Component` class.
-class App extends Component {
-
+export default class App extends Component {
+  
   render() {
     
     return (
@@ -19,6 +21,7 @@ class App extends Component {
       <div className='app'>     
         <Router>
           <div>
+          <h1>Trevor Heatons Portfolio</h1>
           <NavigationContainer/>
 
           <Switch>
@@ -26,17 +29,19 @@ class App extends Component {
             <Route path="/about-me" component={About} />
             <Route path="/contact" component={Contact} />
             <Route path="/blog" component={Blog} />
+           
+           <Route
+           exact
+           path="/portfolio/:slug"
+           component={PortfolioDetail}
+           />
+           <Route component={NoMatch}/>
           </Switch>
           </div>
         </Router>
-        <h1>Trevor Heatons Portfolio</h1>
-        <PortfolioContainer/>
-        
       </div>
-      
-
     );
   }
 }
 
-export default App;
+// export default App;
