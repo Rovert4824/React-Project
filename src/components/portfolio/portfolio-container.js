@@ -41,15 +41,8 @@ export default class PortfolioContainer extends Component {
     portfolioItems(){
         let keyCounter = 0;
         return this.state.data.map(item => {
-            console.log("portfolio item", item);
             keyCounter++;
-            return (
-            <PortfolioItem 
-            title={item.name} 
-            url={item.url} 
-            key={item.id} 
-            slug ={item.id}/>
-            );
+            return <PortfolioItem key={item.id} item ={item}/>  
         });
     }
 
@@ -78,7 +71,8 @@ export default class PortfolioContainer extends Component {
                     Enterprise
                 </button>
 
-                {this.portfolioItems()}
+                <div className="portfolio-items-wrapper">{this.portfolioItems()}</div>
+            
               </div>
         );
     }

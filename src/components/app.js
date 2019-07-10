@@ -18,10 +18,9 @@ export default class App extends Component {
     
     return (
 
-      <div className='app'>     
+      <div className='container'>
         <Router>
           <div>
-          <h1>Trevor Heatons Portfolio</h1>
           <NavigationContainer/>
 
           <Switch>
@@ -38,7 +37,9 @@ export default class App extends Component {
            <Route component={NoMatch}/>
           </Switch>
           </div>
+          <Home/>
         </Router>
+        
       </div>
     );
   }
