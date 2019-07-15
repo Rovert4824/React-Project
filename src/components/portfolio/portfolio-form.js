@@ -1,68 +1,118 @@
 import React, { Component } from "react";
 import axios from "axios";
 
-import PortfolioSidebarList from "../portfolio/portfolio-sidebar-list";
-import PortfolioForm from "../portfolio/portfolio-form";
-
-export default class PortfolioManager extends Component {
-  constructor() {
-    super();
+export default class PortfolioForm extends Component {
+  constructor(props) {
+    super(props);
 
     this.state = {
-      portfolioItems: []
+      name: "",
+      description: "",
+      category: "eCommerce",
+      position: "",
+      url: "",
+      thumb_image: "",
+      banner_image: "",
+      logo: ""
     };
 
-    this.handleSuccessfulFormSubmission = this.handleSuccessfulFormSubmission.bind(
-      this
-    );
-    this.handleFormSubmissionError = this.handleFormSubmissionError.bind(this);
+    this.handleChange = this.handleChange.bind(this);
+    this.handleSubmit = this.handleSubmit.bind(this);
   }
 
-  handleSuccessfulFormSubmission(portfolioItem) {
+  buildForm() {
+    let formData = new FormData();
+
+    formData.append("portfolio_item[name]", this.state.name);
+    formData.append("portfolio_item[description]", this.state.description);
+    formData.append("portfolio_item[url]", this.state.url);
+    formData.append("portfolio_item[category]", this.state.category);
+    formData.append("portfolio_item[position]", this.state.position);
+
+    return formData;
+  }
+
+  handleChange(event) {
     this.setState({
-      portfolioItems: [portfolioItem].concat(this.state.portfolioItems)
+      [event.target.name]: event.target.value
     });
   }
 
-  handleFormSubmissionError(error) {
-    console.log("handleFormSubmissionError error", error);
-  }
-
-  getPortfolioItems() {
+  handleSubmit(event) {
     axios
-      .get(
-        "https://trevorh.devcamp.space/portfolio/portfolio_items?order_by=created_at&direction=desc",
-        {
-          withCredentials: true
-        }
+      .post(
+        "https://trevorh.devcamp.space/portfolio/portfolio_items",
+        this.buildForm(),
+        { withCredentials: true }
       )
       .then(response => {
-        this.setState({
-          portfolioItems: [...response.data.portfolio_items]
-        });
+        this.props.handleSuccessfulFormSubmission(response.data.portfolio_item);
       })
       .catch(error => {
-        console.log("error in getPortfolioItems", error);
+        console.log("portfolio form handleSubmit error", error);
       });
-  }
 
-  componentDidMount() {
-    this.getPortfolioItems();
+    event.preventDefault();
   }
 
   render() {
     return (
-      <div className="portfolio-manager-wrapper">
-        <div className="left-column">
-          <PortfolioForm
-            handleSuccessfulFormSubmission={this.handleSuccessfulFormSubmission}
-            handleFormSubmissionError={this.handleFormSubmissionError}
-          />
-        </div>
+      <div>
+        <h1>PortfolioForm</h1>
 
-        <div className="right-column">
-          <PortfolioSidebarList data={this.state.portfolioItems} />
-        </div>
+        <form onSubmit={this.handleSubmit}>
+          <div>
+            <input
+              type="text"
+              name="name"
+              placeholder="Portfolio Item Name"
+              value={this.state.name}
+              onChange={this.handleChange}
+            />
+
+            <input
+              type="text"
+              name="url"
+              placeholder="URL"
+              value={this.state.url}
+              onChange={this.handleChange}
+            />
+          </div>
+
+          <div>
+            <input
+              type="text"
+              name="position"
+              placeholder="Position"
+              value={this.state.position}
+              onChange={this.handleChange}
+            />
+
+            <select
+              name="category"
+              value={this.state.category}
+              onChange={this.handleChange}
+            >
+              <option value="eCommerce">eCommerce</option>
+              <option value="Scheduling">Scheduling</option>
+              <option value="Enterprise">Enterprise</option>
+            </select>
+          </div>
+
+          <div>
+            <textarea
+              type="text"
+              name="description"
+              placeholder="Description"
+              value={this.state.description}
+              onChange={this.handleChange}
+            />
+          </div>
+
+          <div>
+            <button type="submit">Save</button>
+          </div>
+        </form>
       </div>
     );
   }
